@@ -43,4 +43,52 @@ copyButtons.forEach((btn) => {
     }
   });
 });
+// CALL BUTTON FUNCTIONALITY
+const callButtons = document.querySelectorAll('.call-btn');
+const coinCountEl = document.getElementById('coin-count');
+const callHistoryList = document.getElementById('call-history-list');
+const clearHistoryBtn = document.getElementById('clear-history');
 
+let coins = 100;
+
+callButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    if (coins < 20) {
+      alert("You don't have enough coins to make this call.");
+      return;
+    }
+
+    const card = btn.closest('.bg-white');
+    const serviceName = card.querySelector('h3').innerText;
+    const serviceNumber = card.querySelector('p.font-semibold').innerText;
+
+    // Alert
+    alert(`Calling ${serviceName} at ${serviceNumber}`);
+
+    // Cut coins
+    coins -= 20;
+    coinCountEl.innerText = coins;
+
+    // Add to history
+    const li = document.createElement('li');
+    li.className = "bg-gray-100 px-3 py-2 rounded-[10px] flex justify-between items-center";
+
+    // current time
+    const now = new Date();
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    li.innerHTML = `
+      <div>
+        <strong>${serviceName}</strong><br/>
+        <span class="text-gray-600">${serviceNumber}</span>
+      </div>
+      <span class="text-sm text-gray-500">${timeString}</span>
+    `;
+    callHistoryList.prepend(li); // Newest on top
+  });
+});
+
+// CLEAR BUTTON FUNCTIONALITY
+clearHistoryBtn.addEventListener('click', () => {
+  callHistoryList.innerHTML ='';
+});
